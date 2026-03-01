@@ -5,33 +5,17 @@ node_modules/
 
 # Environment files
 .env
-backend/.env
+.env.local
+.env.production.local
+.env.development.local
 frontend/.env
+frontend/.env.production
+backend/.env
 
 # Build outputs
 dist/
 /frontend/dist/
 /backend/dist/
 
-# Logs
-*.log
-npm-debug.log*
-
-# Docker
-Dockerfile*
-docker-compose.yml
-/nginx/nginx.conf
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-# Netlify
-.netlify
-netlify.toml
-_redirects
+# Vercel
+.vercel
