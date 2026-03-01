@@ -1,0 +1,10 @@
+﻿# Backend
+backend/node_modules
+backend/.env
+backend/.env.local
+backend/dist
+backend/build
+
+# OS files
+.DS_Store
+Thumbs.db
