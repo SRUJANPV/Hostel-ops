@@ -8,11 +8,12 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration - allow your Netlify frontend later
+// CORS configuration
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
-        ? ['https://your-frontend.netlify.app', 'http://localhost:5173'] // Update with your Netlify URL later
-        : 'http://localhost:5173'
+        ? ['https://hostel-ops1.vercel.app', 'http://localhost:5173']
+        : 'http://localhost:5173',
+    credentials: true
 }));
 app.use(express.json());
 
