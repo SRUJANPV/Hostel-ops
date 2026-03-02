@@ -1,4 +1,3 @@
-// backend/src/server.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -9,35 +8,32 @@ dotenv.config();
 
 const app = express();
 
-// --- UPDATED CORS CONFIGURATION ---
-// Define the allowed origins for your application
+// ----- CRITICAL CORS FIX - COPY EXACTLY THIS -----
 const allowedOrigins = [
-  'https://hostel-ops1.vercel.app', // Your production frontend on Vercel
-  'http://localhost:5173',           // Your local Vite dev server
-  'http://localhost:3000'             // Your local backend (if needed)
+  'https://hostel-ops.onrender.com',  // Your Render frontend
+  'http://localhost:5173',            // Local development
+  'http://localhost:3000'              // Local backend
 ];
 
-// Configure CORS options dynamically
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, Postman, or same-origin requests)
-    // or if the origin is in the allowedOrigins list
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
       console.log('Blocked origin:', origin); // Log blocked origins for debugging
-      callback(new Error('Not allowed by CORS'));
+      return callback(new Error('CORS not allowed'), false);
     }
+    return callback(null, true);
   },
-  credentials: true, // Crucial: Allow cookies and authorization headers to be sent
-  optionsSuccessStatus: 200 // For legacy browser support
-};
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 
-app.use(cors(corsOptions));
-// --- END OF UPDATED CORS CONFIGURATION ---
-
-// Handle preflight requests explicitly (though the cors middleware usually does this)
-app.options('*', cors(corsOptions));
+// Handle preflight requests explicitly
+app.options('*', cors());
+// ----- END OF CORS FIX -----
 
 app.use(express.json());
 
@@ -48,6 +44,11 @@ app.use('/api/complaints', complaintRoutes);
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date() });
+});
+
+// Test route to verify CORS
+app.get('/api/auth/test', (req, res) => {
+  res.json({ message: 'Auth API is working' });
 });
 
 const PORT = process.env.PORT || 3000;
