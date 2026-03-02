@@ -4,6 +4,9 @@ import axios from 'axios';
 import ThemeToggle from '../components/ThemeToggle';
 import toast from 'react-hot-toast';
 
+// Get API URL from environment variable or use localhost as fallback
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export default function Register() {
   const [role, setRole] = useState('student');
   const [loading, setLoading] = useState(false);
@@ -19,7 +22,7 @@ export default function Register() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('/api/auth/register', { ...formData, role });
+      await axios.post(`${API_URL}/api/auth/register`, { ...formData, role });
       toast.success('Account created! Please login 🎉');
       navigate('/login');
     } catch (error) {

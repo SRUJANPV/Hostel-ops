@@ -4,6 +4,9 @@ import axios from 'axios';
 import ThemeToggle from '../components/ThemeToggle';
 import toast from 'react-hot-toast';
 
+// Get API URL from environment variable or use localhost as fallback
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export default function StudentDashboard() {
   const { user, logout } = useAuth();
   const [complaints, setComplaints] = useState([]);
@@ -21,7 +24,7 @@ export default function StudentDashboard() {
   const fetchComplaints = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('/api/complaints/my-complaints', {
+      const res = await axios.get(`${API_URL}/api/complaints/my-complaints`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setComplaints(res.data);
@@ -33,7 +36,7 @@ export default function StudentDashboard() {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post('/api/complaints', formData, {
+      await axios.post(`${API_URL}/api/complaints`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Complaint submitted! 🎉');

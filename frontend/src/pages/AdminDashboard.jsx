@@ -4,6 +4,9 @@ import axios from 'axios';
 import ThemeToggle from '../components/ThemeToggle';
 import toast from 'react-hot-toast';
 
+// Get API URL from environment variable or use localhost as fallback
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
   const [complaints, setComplaints] = useState([]);
@@ -15,7 +18,7 @@ export default function AdminDashboard() {
   const fetchComplaints = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('/api/complaints/all', {
+      const res = await axios.get(`${API_URL}/api/complaints/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setComplaints(res.data);
@@ -26,7 +29,7 @@ export default function AdminDashboard() {
     setUpdatingId(id);
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`/api/complaints/${id}/status`, { status }, {
+      await axios.patch(`${API_URL}/api/complaints/${id}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success(`Status updated to ${status} ✅`);
